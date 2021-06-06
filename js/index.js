@@ -77,6 +77,7 @@ loadData().then(data => {
     });
 
     function updateBar(){
+        // task 3
         console.log(data)
         reg = d3.map(data, d => d['region']).keys();
         average = reg.map(
@@ -110,7 +111,7 @@ loadData().then(data => {
             .attr('y',d => yBar(d['mean']) - margin)
             .attr('fill',d => colorScale(d['region']));
 
-
+// task 4
         d3.selectAll('rect').on('click', function (actual, i) {
             if (highlighted != this){
                 d3.selectAll('rect').attr('opacity', 0.7);
@@ -129,6 +130,7 @@ loadData().then(data => {
     }
 
     function updateScattePlot(){
+        //task 1,2
         let xRange = data.map(d => +d[xParam][year]);
         x.domain([d3.min(xRange), d3.max(xRange)]);
 
