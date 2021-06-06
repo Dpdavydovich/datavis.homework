@@ -110,7 +110,22 @@ loadData().then(data => {
             .attr('y',d => yBar(d['mean']) - margin)
             .attr('fill',d => colorScale(d['region']));
 
-        return;
+
+        d3.selectAll('rect').on('click', function (actual, i) {
+            if (highlighted != this){
+                d3.selectAll('rect').attr('opacity', 0.7);
+                d3.select(this).attr('opacity', 1);
+                updateScattePlot();
+                d3.selectAll('circle').filter(d => d['region'] != actual.region).attr('r', 0);
+
+                highlighted = this;}
+            else {
+                d3.selectAll('rect').attr('r', 1);
+                updateScattePlot();}
+        })
+
+
+            return;
     }
 
     function updateScattePlot(){
