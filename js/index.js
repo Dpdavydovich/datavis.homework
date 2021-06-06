@@ -77,6 +77,39 @@ loadData().then(data => {
     });
 
     function updateBar(){
+        console.log(data)
+        reg = d3.map(data, d => d['region']).keys();
+        average = reg.map(
+            region => d3.mean(
+                    data.filter(d => d['region'] == region)
+                        .flatMap(d => d[param][year])
+            )
+        );
+
+        let averagereg = [];
+        reg.forEach((key, i) => {let k= {"region": key, "mean": average[i]};
+            averagereg.push(k);
+        });
+
+        console.log(averagereg)
+        console.log(average)
+        console.log(reg)
+
+        xBar.domain(reg);
+        yBar.domain([0,d3.max(average)]).range([height, 0]);
+        xBarAxis.call(d3.axisBottom(xBar));
+        yBarAxis.call(d3.axisLeft(yBar));
+
+        barChart.selectAll('rect').remove()
+        barChart.selectAll('rect').data(averagereg)
+            .enter()
+            .append('rect')
+            .attr('width',xBar.bandwidth())
+            .attr('height',d => height - yBar(d['mean']))
+            .attr('x',d => xBar(d['region']))
+            .attr('y',d => yBar(d['mean']) - margin)
+            .attr('fill',d => colorScale(d['region']));
+
         return;
     }
 
