@@ -111,8 +111,8 @@ loadData().then(data => {
             .attr('y',d => yBar(d['mean']) - margin)
             .attr('fill',d => colorScale(d['region']));
 
-// task 4
-        d3.selectAll('rect').on('click', function (actual, i) {
+        // task 4
+        d3.selectAll('rect').on('click', function (actual) {
             if (highlighted != this){
                 d3.selectAll('rect').attr('opacity', 0.7);
                 d3.select(this).attr('opacity', 1);
@@ -124,7 +124,6 @@ loadData().then(data => {
                 d3.selectAll('rect').attr('r', 1);
                 updateScattePlot();}
         })
-
 
             return;
     }
@@ -151,6 +150,52 @@ loadData().then(data => {
             .attr("cy", d => y(d[yParam][year]))
             .attr("r", d => radiusScale(d[rParam][year]))
             .attr("fill", d => colorScale(d['region']))
+
+
+        // task 5
+        scatterPlot.selectAll('circle').on('click', function (actual, i) {
+            d3.selectAll('circle').attr('stroke-width', 'default');
+            d3.select(this).attr('stroke-width', 3);
+            selected = actual['country'];
+            updateLinear();
+        })
+
+        return;
+    }
+
+    function updateLinear(){
+        if (selected != null){
+            let tmp = data.filter(d => d['country'] == selected)
+                    .map(d => d[lineParam])[0];
+
+            let datecountry = [];
+            for (let i = 1800; i< 2021; i++)
+                datecountry.push({"year": i, "value": parseFloat(tmp[i])})
+            datecountry.splice(2021-1800, 5);
+
+            let xRange = d3.range(1800, 2021);
+            let yRange = d3.values(tmp).map(d => +d);
+            x.domain([d3.min(xRange), d3.max(xRange)]);
+            y.domain([d3.min(yRange), d3.max(yRange)]);
+            xLineAxis.call(d3.axisBottom(x));
+            yLineAxis.call(d3.axisLeft(y));
+
+            lineChart.append('path')
+                .attr('class', 'line')
+                .datum(datecountry)
+                .enter()
+                .append('path');
+
+            lineChart.selectAll('.line')
+                .datum(datecountry)
+                .attr("fill", "none")
+                .attr("stroke", "steelblue")
+                .attr("stroke-width", 4)
+                .attr("d", d3.line()
+                        .x(d => x(d.year))
+                        .y(d => y(d.value))
+                );
+        }
 
         return;
     }
