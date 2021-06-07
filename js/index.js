@@ -117,8 +117,8 @@ loadData().then(data => {
                 d3.selectAll('rect').attr('opacity', 0.7);
                 d3.select(this).attr('opacity', 1);
                 updateScattePlot();
-                d3.selectAll('circle').filter(d => d['region'] != actual.region).attr('r', 0);
-
+                d3.selectAll('circle').style('opacity', 0);
+                d3.selectAll('circle').filter(d => d['region'] == actual.region).style('opacity', 1);
                 highlighted = this;}
             else {
                 d3.selectAll('rect').attr('r', 1);
