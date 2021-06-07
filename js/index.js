@@ -76,6 +76,11 @@ loadData().then(data => {
         updateBar();
     });
 
+    d3.select('#p').on('change', function(){
+        lineParam = d3.select(this).property('value');
+        updateLinear();
+    })
+
     function updateBar(){
         // task 3
         console.log(data)
@@ -165,6 +170,7 @@ loadData().then(data => {
 
     function updateLinear(){
         if (selected != null){
+            d3.select('.country-name').text(selected);
             let tmp = data.filter(d => d['country'] == selected)
                     .map(d => d[lineParam])[0];
 
